@@ -13,16 +13,19 @@ import static org.math.plot.utils.Array.min;
 
 /** @author Mateusz Stanisław Krukowski **/
 /*Linear Regression counting program */
+
 public class Main {
+
     private static final int n = 128; //length
     public static double[] x = new double[n];
     public static double[] y = new double[n];
-    public static double x̄ = 0; //mean value of x
-    public static double ȳ = 0; // mean value of y
-    public static double a = 0; // slope / współczynnik kierunkowy
-    public static double b = 0; // wyraz wolny
-    public static double R = 0; // współczynnik korelacji liniowej Pearsona
-    public static double R2 = 0; //współczynnik determinacji liniowej
+    public static double x̄ = 0;  //mean value of x / średnia wartość x
+    public static double ȳ = 0;  // mean value of y / średnia wartość x
+    public static double a = 0;  // slope / współczynnik kierunkowy
+    public static double b = 0;  // wyraz wolny
+    public static double R = 0;  // współczynnik korelacji liniowej Pearsona
+    public static double R2 = 0; // współczynnik determinacji liniowej
+
     public static void readFromCsv() throws IOException {
 
         InputStream inputStream = Main.class.getResourceAsStream("data.csv");
@@ -30,7 +33,6 @@ public class Main {
         reader.readLine(); //we don't want the first line as it is the table header not the data!
         String line;
         int i = 0;
-
         while((line = reader.readLine()) !=null) {
             System.out.println(line);
             String[] columns = line.split(",");
@@ -48,7 +50,7 @@ public class Main {
                 .forEach(i -> System.out.println(String.format("%.2f", x[i]) + (x[i]>=100? "   " : "    ") + y[i]));
         //if x[i] has 3 digits then 3 spaces, if it has 2 digits then 4 spaces so the space between x and y is constant
     }
-    public static void regresjaLiniowa(double[] x, double[] y) {
+    public static void linearRegression(double[] x, double[] y) {
 
         for (double i : x) x̄ += i;
         x̄ /= n;
@@ -77,7 +79,6 @@ public class Main {
         R = Sxy / (Math.sqrt(Sx2) * Math.sqrt(Sy2));
         R2 = R * R;
 
-
     }
 
     public static void doTheRegression(double[] x, double[] y, String nazwa_x, String nazwa_y) {
@@ -90,15 +91,12 @@ public class Main {
         double y1 = a * x1 + b;
         double y2 = a * x2 + b;
 
-
-
         Plot2DPanel plot = new Plot2DPanel();
         plot.addLinePlot("nwm",x,y);
         plot.addScatterPlot("Scatter", x, y);
         plot.changePlotColor(0,new Color(0,0,120));
 
         plot.addLinePlot("", Color.BLACK,  new double[] {x1,y1}, new double[]{x2,y2});
-
 
         JFrame frame = new JFrame("Linear Regression");
         frame.setContentPane(plot);
@@ -112,7 +110,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         readFromCsv();
-        regresjaLiniowa(x,y);
+        linearRegression(x,y);
         //debugDataUtility();
         doTheRegression(x, y, "dni", "cena akcji");
     }
